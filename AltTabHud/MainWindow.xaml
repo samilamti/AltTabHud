@@ -5,8 +5,47 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AltTabHud"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Height="226.731" Width="992.115" 
+        Title="TaskSwitchHud" 
+        ShowInTaskbar="False" 
+        Topmost="False" 
+        Opacity="0.875" 
+        AllowsTransparency="False"
+        ShowActivated="False"
+        WindowStyle="ToolWindow"
+        Background="{Binding SelectedBackground}">
+    <Viewbox>
+        <WrapPanel Orientation="Horizontal" Opacity="0.875">
+            <WrapPanel.Resources>
+                <Style TargetType="Label">
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect Color="White" BlurRadius="1" ShadowDepth="1"/>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </WrapPanel.Resources>
+            <Label FontSize="12pt" Content="{Binding WeekField,FallbackValue=Week}" RenderTransformOrigin="0.5,0.5" >
+                <Label.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleY="1" ScaleX="1"/>
+                        <SkewTransform AngleY="0" AngleX="5"/>
+                        <RotateTransform Angle="-5"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Label.RenderTransform>
+            </Label>
+            <Label FontSize="10pt" VerticalAlignment="Top" Content="{Binding DateField,FallbackValue=Date}" />
+            <Label FontSize="8pt" VerticalAlignment="Center" Content="{Binding TimeField,FallbackValue=Time}" RenderTransformOrigin="0.5,0.5" >
+                <Label.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform AngleX="-5"/>
+                        <RotateTransform Angle="5"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Label.RenderTransform>
+            </Label>
+        </WrapPanel>
+    </Viewbox>
 </Window>

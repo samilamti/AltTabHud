@@ -1,0 +1,25 @@
+﻿<Window x:Class="AltTabHud.AcronymExpansionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
+        xmlns:local="clr-namespace:AltTabHud"
+        mc:Ignorable="d"
+        Title="AcronymExpansionWindow" Height="22.819" Width="295.233" AllowsTransparency="True" Background="Transparent" WindowStyle="None"
+        KeyUp="Window_KeyUp">
+    <StackPanel Orientation="Horizontal">
+        <RichTextBox Background="#ee10aaff" Name="Input">
+            <FlowDocument>
+                <Section>
+                    <Paragraph>
+                        <Span Background="Transparent"></Span>
+                    </Paragraph>
+                </Section>
+            </FlowDocument>
+        </RichTextBox>
+        <Button Click="WhenFollowLinkButtonIsClicked">
+            <emoji:TextBlock FontSize="12" Text="🔗"></emoji:TextBlock>
+        </Button>
+    </StackPanel>
+</Window>
