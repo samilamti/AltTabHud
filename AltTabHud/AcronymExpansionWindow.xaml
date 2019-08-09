@@ -7,8 +7,12 @@
         xmlns:local="clr-namespace:AltTabHud"
         mc:Ignorable="d"
         Title="AcronymExpansionWindow" Height="22.819" Width="295.233" AllowsTransparency="True" Background="Transparent" WindowStyle="None"
-        KeyUp="Window_KeyUp">
-    <StackPanel Orientation="Horizontal">
+        KeyUp="Window_KeyUp"
+        FocusManager.FocusedElement="{Binding ElementName=Input}">
+    <DockPanel>
+        <Button Click="WhenFollowLinkButtonIsClicked" DockPanel.Dock="Right">
+            <emoji:TextBlock FontSize="12" Text="🔗"></emoji:TextBlock>
+        </Button>
         <RichTextBox Background="#ee10aaff" Name="Input">
             <FlowDocument>
                 <Section>
@@ -18,8 +22,5 @@
                 </Section>
             </FlowDocument>
         </RichTextBox>
-        <Button Click="WhenFollowLinkButtonIsClicked">
-            <emoji:TextBlock FontSize="12" Text="🔗"></emoji:TextBlock>
-        </Button>
-    </StackPanel>
+    </DockPanel>
 </Window>

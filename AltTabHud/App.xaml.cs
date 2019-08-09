@@ -60,26 +60,36 @@ namespace AltTabHud
 
             if (capsLockIsActive)
             {
+                CapsLockControl.PushButton(); // toggle it back off
+
                 if (!AcronymExpansionWindow.IsVisible)
                 {
                     PreviouslyActiveWindow = GetForegroundWindow();
-                    if (GetWindowRect(PreviouslyActiveWindow, out RECT rect))
+                    POINT p = new POINT();
+                    GetCursorPos(ref p);
+                    RECT rect = new RECT {
+                        Top = p.y,
+                        Left = p.x
+                    };
+
+                    if (GetWindowRect(PreviouslyActiveWindow, ref rect))
                     {
-                        AcronymExpansionWindow.Left = rect.Left + 32;
-                        AcronymExpansionWindow.Top = rect.Top + 1;
-                        AcronymExpansionWindow.ShowInTaskbar = false;
-                        AcronymExpansionWindow.Topmost = true;
-                        AcronymExpansionWindow.ShowActivated = true;
-                        AcronymExpansionWindow.Show();
+                        AcronymExpansionWindow.Left = rect.Left;
+                        AcronymExpansionWindow.Top = rect.Top;
                     }
+                    AcronymExpansionWindow.ShowInTaskbar = false;
+                    AcronymExpansionWindow.Topmost = true;
+                    AcronymExpansionWindow.ShowActivated = true;
+                    AcronymExpansionWindow.Show();
+                    AcronymExpansionWindow.Focus();
                 }
             }
-            else if (AcronymExpansionWindow.IsVisible)
-            {
-                var expansion = AcronymExpansionWindow.Complete();
-                SetActiveWindow(PreviouslyActiveWindow);
-                System.Windows.Forms.SendKeys.SendWait(expansion);
-            }
+            //else if (AcronymExpansionWindow.IsVisible)
+            //{
+            //    var expansion = AcronymExpansionWindow.Complete();
+            //    SetActiveWindow(PreviouslyActiveWindow);
+            //    System.Windows.Forms.SendKeys.SendWait(expansion);
+            //}
 
             if (windowWasClicked)
             {

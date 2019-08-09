@@ -57,7 +57,7 @@ namespace AltTabHud
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+        public static extern bool GetWindowRect(IntPtr hWnd, ref RECT lpRect);
 
         [StructLayout(LayoutKind.Sequential)]
         public struct RECT
@@ -66,6 +66,15 @@ namespace AltTabHud
             public int Top;         // y position of upper-left corner
             public int Right;       // x position of lower-right corner
             public int Bottom;      // y position of lower-right corner
+        }
+
+        [DllImport("user32.dll")]
+        public static extern bool GetCursorPos(ref POINT lpPoint);
+
+        public struct POINT
+        {
+            public int x;
+            public int y;
         }
 
         [DllImport("user32.dll")]
