@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -11,8 +10,10 @@ namespace AltTabHud
 {
     public partial class AcronymExpansionWindow : Window
     {
+        public event Action<string> Completed = _ => { };
+
         private static readonly Dictionary<string, Func<string>> Acronyms = new Dictionary<string, Func<string>> {
-            { "DATE", () => DateTime.Now.ToString("yyyy-MM-dd") }
+            { "date", () => DateTime.Now.ToString("yyyy-MM-dd") }
         };
         private static readonly List<string> ChromeOptions = new List<string>
         {
@@ -24,8 +25,6 @@ namespace AltTabHud
             "--window-workspace=2",
             "--utility"
         };
-
-        private StringBuilder acronym = new StringBuilder();
 
         public AcronymExpansionWindow()
         {
@@ -46,6 +45,12 @@ namespace AltTabHud
             if (e.Key == Key.Escape)
             {
                 Visibility = Visibility.Hidden;
+                return;
+            }
+
+            if (e.Key == Key.Enter)
+            {
+                Completed(Complete());
                 return;
             }
         }

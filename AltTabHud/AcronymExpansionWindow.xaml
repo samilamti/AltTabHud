@@ -8,7 +8,8 @@
         mc:Ignorable="d"
         Title="AcronymExpansionWindow" Height="22.819" Width="295.233" AllowsTransparency="True" Background="Transparent" WindowStyle="None"
         KeyUp="Window_KeyUp"
-        FocusManager.FocusedElement="{Binding ElementName=Input}">
+        FocusManager.FocusedElement="{Binding ElementName=Input}"
+        ShowActivated="True" ShowInTaskbar="False" Topmost="True">
     <DockPanel>
         <Button Click="WhenFollowLinkButtonIsClicked" DockPanel.Dock="Right">
             <emoji:TextBlock FontSize="12" Text="🔗"></emoji:TextBlock>

@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
-using System.Windows.Controls;
 using static AltTabHud.WinApi;
 
 namespace AltTabHud
@@ -25,7 +24,8 @@ namespace AltTabHud
 
             Current.MainWindow = mainWindow;
 
-            AcronymExpansionWindow = new AcronymExpansionWindow { Visibility = Visibility.Hidden };
+            AcronymExpansionWindow = new AcronymExpansionWindow { Visibility = Visibility.Visible };
+            AcronymExpansionWindow.Completed += AfterAcronymExpansionWindowCompleted;
 
             base.OnStartup(e);
         }
@@ -51,8 +51,25 @@ namespace AltTabHud
 
         private IntPtr PreviouslyActiveWindow;
 
+
+        static Rect RealPixelsToWpf(Window w, RECT rect)
+        {
+            var t = PresentationSource.FromVisual(w).CompositionTarget.TransformFromDevice;
+            var topLeft = t.Transform(new Point(rect.Left, rect.Top));
+            var bottomRight = t.Transform(new Point(rect.Right, rect.Bottom));
+            return new Rect(topLeft, bottomRight);
+        }
+
+        bool init = true;
+
         private void OnTimerElapsed()
         {
+            if (init)
+            {
+                AcronymExpansionWindow.Visibility = Visibility.Hidden;
+                init = false;
+            }
+
             var window = Current.MainWindow as MainWindow;
             if (window == null) return;
 
@@ -65,31 +82,16 @@ namespace AltTabHud
                 if (!AcronymExpansionWindow.IsVisible)
                 {
                     PreviouslyActiveWindow = GetForegroundWindow();
-                    POINT p = new POINT();
-                    GetCursorPos(ref p);
-                    RECT rect = new RECT {
-                        Top = p.y,
-                        Left = p.x
-                    };
 
-                    if (GetWindowRect(PreviouslyActiveWindow, ref rect))
+                    if (GetWindowRect(PreviouslyActiveWindow, out RECT rect))
                     {
-                        AcronymExpansionWindow.Left = rect.Left;
-                        AcronymExpansionWindow.Top = rect.Top;
+                        var wpfRect = RealPixelsToWpf(AcronymExpansionWindow, rect);
+                        AcronymExpansionWindow.Top = wpfRect.Top + (wpfRect.Height - AcronymExpansionWindow.Height) / 2;
+                        AcronymExpansionWindow.Left = wpfRect.Left + (wpfRect.Width - AcronymExpansionWindow.Width) / 2;
                     }
-                    AcronymExpansionWindow.ShowInTaskbar = false;
-                    AcronymExpansionWindow.Topmost = true;
-                    AcronymExpansionWindow.ShowActivated = true;
-                    AcronymExpansionWindow.Show();
-                    AcronymExpansionWindow.Focus();
+                    AcronymExpansionWindow.Visibility = Visibility.Visible;
                 }
             }
-            //else if (AcronymExpansionWindow.IsVisible)
-            //{
-            //    var expansion = AcronymExpansionWindow.Complete();
-            //    SetActiveWindow(PreviouslyActiveWindow);
-            //    System.Windows.Forms.SendKeys.SendWait(expansion);
-            //}
 
             if (windowWasClicked)
             {
@@ -102,6 +104,13 @@ namespace AltTabHud
                 window.Invalidate();
             }
         }
+
+        private void AfterAcronymExpansionWindowCompleted(string expansion)
+        {
+            SetForegroundWindow(PreviouslyActiveWindow);
+            System.Windows.Forms.SendKeys.SendWait(expansion);
+        }
+
 
         private void WhenWindowIsDoubleClicked(object sender, EventArgs args)
         {
